@@ -7,87 +7,51 @@
 | Gallant Damas Hayuaji         | 5027231037 |
 | M. Fadhil Saifullah           | 5027231068 |
 
+
+
 # BookStore Management System
 
-Program ini adalah implementasi sederhana dari sistem manajemen toko buku dengan menggunakan C++. Sistem ini memungkinkan pengguna untuk mengelola item-item yang terdapat di dalam toko buku, menambahkannya ke receipt, mengubah jumlah item, menampilkan receipt saat ini, serta menghapus item dari receipt.
+Sistem ini adalah implementasi sederhana dari sistem manajemen toko buku menggunakan C++. Sistem ini memungkinkan pengguna untuk mengelola item-item yang tersedia di toko buku, menambahkannya ke dalam receipt, mengubah jumlah item dalam receipt, menampilkan receipt saat ini, serta menghapus item dari receipt.
 
 ## Fitur Utama
-- **Tambahkan Item ke Receipt**: Menambahkan item yang tersedia di toko buku ke receipt dengan jumlah yang diinginkan.
-- **Tampilkan Receipt Saat Ini**: Menampilkan semua item yang telah ditambahkan ke receipt beserta jumlah dan total harga.
-- **Ubah Jumlah Item dari Receipt**: Pengguna dapat mengubah jumlah item yang sudah ada di receipt.
+
+- **Tambahkan Item ke Receipt**: Menambahkan item yang tersedia di toko buku ke dalam receipt dengan jumlah yang diinginkan.
+- **Tampilkan Receipt Saat Ini**: Menampilkan semua item yang ada di receipt, jumlah masing-masing item, harga masing-masing item, dan total harga.
+- **Ubah Jumlah Item dalam Receipt**: Mengubah jumlah item tertentu dalam receipt.
 - **Hapus Item dari Receipt**: Menghapus item tertentu dari receipt.
-- **Keluar**: Mengakhiri program.
 
-## Kelas Utama
-### 1. Item
-Merepresentasikan item di toko buku dengan atribut:
-- `id` (int): ID unik untuk setiap item.
-- `name` (string): Nama item.
-- `price` (double): Harga item.
+## Konsep OOP yang Diterapkan
 
-### 2. ReceiptItem
-Merepresentasikan item dalam receipt dengan atribut sebagai berikut:
-- `item` (Item): Objek item.
-- `jumlah` (int): Jumlah item dalam receipt.
+- **Class & Object**: Kelas `ItemBase`, `Item`, `PaperItem`, `NonPaperItem`, `ReceiptItem`, dan `Receipt` digunakan untuk mendefinisikan item dan receipt.
+- **Attribute Property and Method Behavior**: Atribut dan metode disusun secara logis dalam kelas.
+- **Constructor**: Konstruktor digunakan untuk inisialisasi objek, seperti dalam kelas `Item` dan `ReceiptItem`.
+- **Setter & Getter**: Metode getter (`getId`, `getName`, `getPrice`, `getItem`, `getJumlah`) digunakan untuk mengakses atribut privat. Metode setter (`setJumlah`) digunakan untuk mengubah nilai atribut.
+- **Encapsulation**: Atribut privat (`id`, `name`, `price`, `item`, `jumlah`) hanya dapat diakses melalui metode publik.
+- **Inheritance**: Kelas `PaperItem` dan `NonPaperItem` mewarisi dari kelas `Item`.
+- **Overriding**: Metode `getId`, `getName`, dan `getPrice` di kelas `Item` mengoverride metode abstrak di kelas `ItemBase`.
+- **Access Modifier / Visibility**: Penggunaan `private` untuk atribut dan `public` untuk metode untuk mengatur aksesibilitas.
+- **Abstraction**: Kelas abstrak `ItemBase` memberikan antarmuka umum untuk kelas `Item`.
+- **Polymorphism**: Penggunaan polimorfisme terlihat pada kelas turunan `PaperItem` dan `NonPaperItem` dari kelas `Item`.
 
-### 3. Receipt
-Merepresentasikan receipt dengan atribut:
-- `items` (vector<ReceiptItem>): Vektor yang menyimpan semua item dalam receipt.
+## Penggunaan
 
-## Metode Utama
-### Item
-- **Konstruktor**: `Item(string name, double price)`
+1. **Kompilasi Kode**:
+2. **Jalankan Program**:
+3. **Menu Interaktif**:
+   - Pilih opsi untuk menambahkan item ke receipt, menampilkan receipt saat ini, mengubah jumlah item dalam receipt, atau menghapus item dari receipt.
+   - Ikuti petunjuk di layar untuk memasukkan ID item dan jumlah.
 
-### ReceiptItem
-- **Konstruktor**: `ReceiptItem(const Item& item, int jumlah)`
+## Contoh Item yang Tersedia
 
-### Receipt
-- **addItem**: Menambahkan item ke dalam receipt.
-- **displayReceipt**: Menampilkan semua item dalam receipt.
-- **updateItemJumlah**: Mengubah jumlah item dalam receipt.
-- **removeItem**: Menghapus item dari receipt.
+- Buku (Kertas)
+- Folio (Kertas)
+- Pensil (Non-Kertas)
+- Penghapus (Non-Kertas)
+- Bolpoin (Non-Kertas)
+- Penggaris (Non-Kertas)
+- Lem (Non-Kertas)
+- Klip Kertas (Non-Kertas)
+- Spidol (Non-Kertas)
+- Jangka (Non-Kertas)
 
-## Cara Kerja
-1. Mengompilasi dan menjalankan program
-2. Pilih opsi dari menu yang ditampilkan:
-   - `1`: Tambahkan item ke receipt.
-   - `2`: Tampilkan receipt saat ini.
-   - `3`: Ubah jumlah item dari receipt.
-   - `4`: Hapus item dari receipt.
-   - `5`: Keluar dari program.
-3. Mengikuti instruksi yang diberikan untuk setiap opsi.
-
-### Tambahkan Item ke Receipt
-- Pilih opsi `1`.
-- Lihat daftar item yang tersedia.
-- Masukkan ID item yang ingin ditambahkan.
-- Masukkan jumlah item yang ingin ditambahkan.
-
-### Tampilkan Receipt Saat Ini
-- Pilih opsi `2`.
-- Sistem akan menampilkan semua item yang telah ditambahkan ke receipt beserta detailnya.
-
-### Ubah Jumlah Item dari Receipt
-- Pilih opsi `3`.
-- Masukkan ID item yang jumlahnya ingin diubah.
-- Masukkan jumlah baru untuk item tersebut.
-
-### Hapus Item dari Receipt
-- Pilih opsi `4`.
-- Masukkan ID item yang ingin dihapus dari receipt.
-
-### Keluar
-- Pilih opsi `5` untuk keluar dari program.
-
-## Daftar Item yang Tersedia pada program
-- Buku (5000)
-- Pensil (2500)
-- Penghapus (4000)
-- Bolpoin (3000)
-- Penggaris (10000)
-- Lem (8000)
-- Klip Kertas (12000)
-- Folio (40000)
-- Spidol (5000)
-- Jangka (20000)
 
