@@ -5,7 +5,16 @@
 
 using namespace std;
 
-class Item
+class ItemBase
+{
+public:
+    virtual int getId() const = 0;
+    virtual string getName() const = 0;
+    virtual double getPrice() const = 0;
+    virtual ~ItemBase() = default;
+};
+
+class Item : public ItemBase
 {
 private:
     int id;
@@ -17,32 +26,46 @@ public:
     Item(string name, double price)
         : id(nextId++), name(name), price(price) {}
 
-    int getId() const {
+    int getId() const override {
         return id;
     }
 
-    string getName() const {
+    string getName() const override {
         return name;
     }
 
-    double getPrice() const {
+    double getPrice() const override {
         return price;
     }
 };
 
 int Item::nextId = 1;
 
+class PaperItem : public Item
+{
+public:
+    PaperItem(string name, double price)
+        : Item(name, price) {}
+};
+
+class NonPaperItem : public Item
+{
+public:
+    NonPaperItem(string name, double price)
+        : Item(name, price) {}
+};
+
 class ReceiptItem
 {
 private:
-    Item item;
+    const Item* item;
     int jumlah;
 
 public:
-    ReceiptItem(const Item& item, int jumlah)
+    ReceiptItem(const Item* item, int jumlah)
         : item(item), jumlah(jumlah) {}
 
-    Item getItem() const {
+    const Item* getItem() const {
         return item;
     }
 
@@ -61,15 +84,15 @@ private:
     vector<ReceiptItem> items;
 
 public:
-    void addItem(const Item& item, int jumlah)
+    void addItem(const Item* item, int jumlah)
     {
         for (auto& receiptItem : items) {
-            if (receiptItem.getItem().getId() == item.getId()) {
+            if (receiptItem.getItem()->getId() == item->getId()) {
                 receiptItem.setJumlah(receiptItem.getJumlah() + jumlah);
                 return;
             }
         }
-        items.push_back(ReceiptItem(item, jumlah)); 
+        items.emplace_back(item, jumlah);
     }
 
     void displayReceipt() const
@@ -77,11 +100,11 @@ public:
         cout << "Receipt:" << endl;
         double totalCost = 0.0;
         for (const auto& receiptItem : items) {
-            double itemTotal = receiptItem.getItem().getPrice() * receiptItem.getJumlah();
+            double itemTotal = receiptItem.getItem()->getPrice() * receiptItem.getJumlah();
             totalCost += itemTotal;
-            cout << "--------------------\nItem: " << receiptItem.getItem().getName()
-                 << "\njumlah: " << receiptItem.getJumlah()
-                 << "\nHarga Barang: " << receiptItem.getItem().getPrice()
+            cout << "--------------------\nItem: " << receiptItem.getItem()->getName()
+                 << "\nJumlah: " << receiptItem.getJumlah()
+                 << "\nHarga Barang: " << receiptItem.getItem()->getPrice()
                  << "\nTotal Harga: " << itemTotal << endl;
         }
         cout << "--------------------\nTotal Harga Semua Item: " << totalCost << endl;
@@ -89,8 +112,8 @@ public:
 
     void updateItemJumlah(int itemId, int jumlah)
     {
-        for (auto& receiptItem : items) { 
-            if (receiptItem.getItem().getId() == itemId) {
+        for (auto& receiptItem : items) {
+            if (receiptItem.getItem()->getId() == itemId) {
                 receiptItem.setJumlah(jumlah);
                 return;
             }
@@ -98,11 +121,11 @@ public:
         cout << "Item belum ditambahkan" << endl;
     }
 
-    void removeItem(int itemId) 
+    void removeItem(int itemId)
     {
         items.erase(remove_if(items.begin(), items.end(),
                               [itemId](const ReceiptItem& receiptItem) {
-                                  return receiptItem.getItem().getId() == itemId;
+                                  return receiptItem.getItem()->getId() == itemId;
                               }),
                     items.end());
     }
@@ -124,40 +147,40 @@ int main()
 {
     Receipt receipt;
 
-    Item Buku("Buku", 5000);
-    Item Pensil("Pensil", 2500);
-    Item Penghapus("Penghapus", 4000);
-    Item Bolpoin("Bolpoin", 3000);
-    Item Penggaris("Penggaris", 10000);
-    Item Lem("Lem", 8000);
-    Item KlipKertas("Klip Kertas", 12000);
-    Item Folio("Folio", 40000);
-    Item Spidol("Spidol", 5000);
-    Item Jangka("Jangka", 20000);
+    PaperItem Buku("Buku", 5000);
+    PaperItem Folio("Folio", 40000);
+    NonPaperItem Pensil("Pensil", 2500);
+    NonPaperItem Penghapus("Penghapus", 4000);
+    NonPaperItem Bolpoin("Bolpoin", 3000);
+    NonPaperItem Penggaris("Penggaris", 10000);
+    NonPaperItem Lem("Lem", 8000);
+    NonPaperItem KlipKertas("Klip Kertas", 12000);
+    NonPaperItem Spidol("Spidol", 5000);
+    NonPaperItem Jangka("Jangka", 20000);
 
-    vector<Item> storeItems = {Buku, Pensil, Penghapus, Bolpoin, Penggaris, Lem, KlipKertas, Folio, Spidol, Jangka};
+    vector<Item*> storeItems = {&Buku, &Pensil, &Penghapus, &Bolpoin, &Penggaris, &Lem, &KlipKertas, &Folio, &Spidol, &Jangka};
 
-    int pilihan;
+    int choice;
     do {
         displayMenu();
         cout << "Masukkan Pilihan Anda: ";
-        cin >> pilihan;
+        cin >> choice;
 
-        switch (pilihan) {
+        switch (choice) {
             case 1: {
                 cout << "Item yang tersedia:" << endl;
                 for (const auto& item : storeItems) {
-                    cout << "ID: " << item.getId() << ", Nama: " << item.getName() << ", Harga: " << item.getPrice() << endl;
+                    cout << "ID: " << item->getId() << ", Nama: " << item->getName() << ", Harga: " << item->getPrice() << endl;
                 }
 
                 int itemId, jumlah;
-                cout << "Masukkan ID Item untuk ADD: ";
+                cout << "Masukkan ID Item untuk add: ";
                 cin >> itemId;
                 cout << "Masukkan jumlah: ";
                 cin >> jumlah;
 
-                auto it = find_if(storeItems.begin(), storeItems.end(), [itemId](const Item& item) {
-                    return item.getId() == itemId;
+                auto it = find_if(storeItems.begin(), storeItems.end(), [itemId](const Item* item) {
+                    return item->getId() == itemId;
                 });
 
                 if (it != storeItems.end()) {
@@ -173,7 +196,7 @@ int main()
             }
             case 3: {
                 int itemId, jumlah;
-                cout << "Masukkan ID Item untuk UPDATE: ";
+                cout << "Masukkan ID Item untuk update: ";
                 cin >> itemId;
                 cout << "Masukkan jumlah yang baru: ";
                 cin >> jumlah;
@@ -182,20 +205,20 @@ int main()
             }
             case 4: {
                 int itemId;
-                cout << "Masukkan ID Item untuk DELETE: ";
+                cout << "Masukkan ID Item untuk dihapus: ";
                 cin >> itemId;
                 receipt.removeItem(itemId);
                 break;
             }
             case 5: {
-                cout << "Berhasil Keluar dari Program" << endl;
+                cout << "Berhasil Keluar" << endl;
                 break;
             }
             default:
                 cout << "Pilihan tidak valid. Silakan coba lagi!" << endl;
                 break;
         }
-    } while (pilihan != 5);
+    } while (choice != 5);
 
     return 0;
 }
